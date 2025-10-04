@@ -1,0 +1,252 @@
+# config/full_experiment.yaml
+# Full experimental grid for exp-1-language-modelling-scaling
+
+experiments:
+  # ----------------------------------------------------------------------------------
+  # GPT-2 SMALL (≈125 M)
+  # ----------------------------------------------------------------------------------
+  - run_id: gpt2-small_ce-baseline
+    task_type: language_modeling
+    dataset:
+      name: wikitext-2
+      seq_length: 1024
+    model:
+      name: gpt2-small
+      from_pretrained: false
+    training:
+      epochs: 10
+      batch_size: 16
+      learning_rate: 5e-4
+      loss: ce
+      warmup_steps: 1000
+    seed: 42
+
+  - run_id: gpt2-small_brier-baseline
+    task_type: language_modeling
+    dataset:
+      name: wikitext-2
+      seq_length: 1024
+    model:
+      name: gpt2-small
+      from_pretrained: false
+    training:
+      epochs: 10
+      batch_size: 16
+      learning_rate: 5e-4
+      loss: brier
+      warmup_steps: 1000
+    seed: 42
+
+  - run_id: gpt2-small_dpsm-linear
+    task_type: language_modeling
+    dataset:
+      name: wikitext-2
+      seq_length: 1024
+    model:
+      name: gpt2-small
+      from_pretrained: false
+    training:
+      epochs: 10
+      batch_size: 16
+      learning_rate: 5e-4
+      loss: dpsm-linear
+      warmup_steps: 1000
+    seed: 42
+
+  - run_id: gpt2-small_dpsm-cosine
+    task_type: language_modeling
+    dataset:
+      name: wikitext-2
+      seq_length: 1024
+    model:
+      name: gpt2-small
+      from_pretrained: false
+    training:
+      epochs: 10
+      batch_size: 16
+      learning_rate: 5e-4
+      loss: dpsm-cosine
+      warmup_steps: 1000
+    seed: 42
+
+  - run_id: gpt2-small_dpsm-fixed-alpha0.5
+    task_type: language_modeling
+    dataset:
+      name: wikitext-2
+      seq_length: 1024
+    model:
+      name: gpt2-small
+      from_pretrained: false
+    training:
+      epochs: 10
+      batch_size: 16
+      learning_rate: 5e-4
+      loss: dpsm-fixed-alpha0.5
+      warmup_steps: 1        # not used for fixed-alpha but kept for interface
+    seed: 42
+
+  # ----------------------------------------------------------------------------------
+  # GPT-2 MEDIUM (≈355 M)
+  # ----------------------------------------------------------------------------------
+  - run_id: gpt2-medium_ce-baseline
+    task_type: language_modeling
+    dataset:
+      name: wikitext-2
+      seq_length: 1024
+    model:
+      name: gpt2-medium
+      from_pretrained: false
+    training:
+      epochs: 10
+      batch_size: 8
+      learning_rate: 5e-4
+      loss: ce
+      warmup_steps: 1000
+    seed: 43
+
+  - run_id: gpt2-medium_brier-baseline
+    task_type: language_modeling
+    dataset:
+      name: wikitext-2
+      seq_length: 1024
+    model:
+      name: gpt2-medium
+      from_pretrained: false
+    training:
+      epochs: 10
+      batch_size: 8
+      learning_rate: 5e-4
+      loss: brier
+      warmup_steps: 1000
+    seed: 43
+
+  - run_id: gpt2-medium_dpsm-linear
+    task_type: language_modeling
+    dataset:
+      name: wikitext-2
+      seq_length: 1024
+    model:
+      name: gpt2-medium
+      from_pretrained: false
+    training:
+      epochs: 10
+      batch_size: 8
+      learning_rate: 5e-4
+      loss: dpsm-linear
+      warmup_steps: 1000
+    seed: 43
+
+  - run_id: gpt2-medium_dpsm-cosine
+    task_type: language_modeling
+    dataset:
+      name: wikitext-2
+      seq_length: 1024
+    model:
+      name: gpt2-medium
+      from_pretrained: false
+    training:
+      epochs: 10
+      batch_size: 8
+      learning_rate: 5e-4
+      loss: dpsm-cosine
+      warmup_steps: 1000
+    seed: 43
+
+  - run_id: gpt2-medium_dpsm-fixed-alpha0.5
+    task_type: language_modeling
+    dataset:
+      name: wikitext-2
+      seq_length: 1024
+    model:
+      name: gpt2-medium
+      from_pretrained: false
+    training:
+      epochs: 10
+      batch_size: 8
+      learning_rate: 5e-4
+      loss: dpsm-fixed-alpha0.5
+      warmup_steps: 1
+    seed: 43
+
+  # ----------------------------------------------------------------------------------
+  # GPT-2 LARGE (≈774 M)
+  # ----------------------------------------------------------------------------------
+  - run_id: gpt2-large_ce-baseline
+    task_type: language_modeling
+    dataset:
+      name: wikitext-2
+      seq_length: 1024
+    model:
+      name: gpt2-large
+      from_pretrained: false
+    training:
+      epochs: 10
+      batch_size: 4
+      learning_rate: 5e-4
+      loss: ce
+      warmup_steps: 1000
+    seed: 44
+
+  - run_id: gpt2-large_brier-baseline
+    task_type: language_modeling
+    dataset:
+      name: wikitext-2
+      seq_length: 1024
+    model:
+      name: gpt2-large
+      from_pretrained: false
+    training:
+      epochs: 10
+      batch_size: 4
+      learning_rate: 5e-4
+      loss: brier
+      warmup_steps: 1000
+    seed: 44
+
+  - run_id: gpt2-large_dpsm-linear
+    task_type: language_modeling
+    dataset:
+      name: wikitext-2
+      seq_length: 1024
+    model:
+      name: gpt2-large
+      from_pretrained: false
+    training:
+      epochs: 10
+      batch_size: 4
+      learning_rate: 5e-4
+      loss: dpsm-linear
+      warmup_steps: 1000
+    seed: 44
+
+  - run_id: gpt2-large_dpsm-cosine
+    task_type: language_modeling
+    dataset:
+      name: wikitext-2
+      seq_length: 1024
+    model:
+      name: gpt2-large
+      from_pretrained: false
+    training:
+      epochs: 10
+      batch_size: 4
+      learning_rate: 5e-4
+      loss: dpsm-cosine
+      warmup_steps: 1000
+    seed: 44
+
+  - run_id: gpt2-large_dpsm-fixed-alpha0.5
+    task_type: language_modeling
+    dataset:
+      name: wikitext-2
+      seq_length: 1024
+    model:
+      name: gpt2-large
+      from_pretrained: false
+    training:
+      epochs: 10
+      batch_size: 4
+      learning_rate: 5e-4
+      loss: dpsm-fixed-alpha0.5
+      warmup_steps: 1
+    seed: 44

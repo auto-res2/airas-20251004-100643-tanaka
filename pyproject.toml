@@ -1,1 +1,24 @@
-# Please list the required python packages.
+[build-system]
+requires = ["setuptools>=65.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dpsm-core"
+version = "0.1.0"
+description = "Dynamic Proper-Score Mixing experiments"
+requires-python = ">=3.9"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "OpenAI Research Automation", email = "noreply@example.com"}
+]
+
+[project.dependencies]
+torch = "*"
+tqdm = "*"
+pyyaml = "*"
+matplotlib = "*"
+seaborn = "*"
+pandas = "*"
+transformers = "*"
+datasets = "*"
+sentencepiece = "*"

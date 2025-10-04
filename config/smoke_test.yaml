@@ -1,0 +1,45 @@
+# config/smoke_test.yaml
+# Lightweight end-to-end sanity check. Runs on a tiny *synthetic* dataset so
+# that CI can finish within seconds.
+
+experiments:
+  - run_id: dummy_ce
+    task_type: language_modeling
+    dataset:
+      name: dummy            # built-in dataset – no external downloads
+      vocab_size: 128
+      seq_length: 32
+      num_samples: 256
+    model:
+      name: dummy            # tiny LSTM defined in src/model.py
+      vocab_size: 128
+      embedding_dim: 64
+      hidden_dim: 128
+    training:
+      epochs: 1
+      batch_size: 8
+      learning_rate: 1e-3
+      loss: ce
+      warmup_steps: 10
+    seed: 42
+
+  - run_id: dummy_dpsm
+    task_type: language_modeling
+    dataset:
+      name: dummy
+      vocab_size: 128
+      seq_length: 32
+      num_samples: 256
+    model:
+      name: dummy
+      vocab_size: 128
+      embedding_dim: 64
+      hidden_dim: 128
+    training:
+      epochs: 1
+      batch_size: 8
+      learning_rate: 1e-3
+      loss: dpsm
+      warmup_steps: 10
+      schedule: linear
+    seed: 42
