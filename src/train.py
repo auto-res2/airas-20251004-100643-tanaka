@@ -149,29 +149,42 @@ def evaluate(
     """Return perplexity & ECE on the supplied validation / test split."""
 
     model.eval()
-    all_logits: List[torch.Tensor] = []
-    all_targets: List[torch.Tensor] = []
+    total_ce_loss = 0.0
+    total_tokens = 0
+    all_probs: List[torch.Tensor] = []
+    all_labels: List[torch.Tensor] = []
+
     with torch.no_grad():
         for inputs, targets in data_loader:
             inputs = _move_inputs_to_device(inputs, device)
             targets = targets.to(device)
             logits = model(inputs)
             _ = loss_fn(logits, targets)  # keep internal step counters consistent
-            all_logits.append(logits.detach())
-            all_targets.append(targets.detach())
 
-    logits = torch.cat(all_logits, dim=0)
-    targets = torch.cat(all_targets, dim=0)
+            # Compute CE loss for perplexity
+            ce_loss = F.cross_entropy(
+                logits.view(-1, logits.size(-1)), targets.view(-1), reduction="sum"
+            )
+            total_ce_loss += ce_loss.item()
+            total_tokens += targets.numel()
 
-    ppl = torch.exp(
-        F.cross_entropy(
-            logits.view(-1, logits.size(-1)), targets.view(-1), reduction="mean"
-        )
-    ).item()
+            # For ECE, accumulate probs and labels (move to CPU to save GPU memory)
+            probs = logits.softmax(-1).view(-1, logits.size(-1)).cpu()
+            labels = targets.view(-1).cpu()
+            all_probs.append(probs)
+            all_labels.append(labels)
 
-    probs = logits.softmax(-1).view(-1, logits.size(-1))
-    labels = targets.view(-1)
-    ece = expected_calibration_error(probs, labels, num_bins=10).item()
+            # Clear GPU cache
+            del logits, probs, labels
+            torch.cuda.empty_cache()
+
+    # Compute perplexity
+    ppl = torch.exp(torch.tensor(total_ce_loss / max(total_tokens, 1))).item()
+
+    # Compute ECE on CPU
+    probs_all = torch.cat(all_probs, dim=0)
+    labels_all = torch.cat(all_labels, dim=0)
+    ece = expected_calibration_error(probs_all, labels_all, num_bins=10).item()
 
     return ppl, ece
 
@@ -213,7 +226,8 @@ def main() -> None:
     # ------------------------------------------------------------------
     model = get_model(cfg, vocab_size=vocab_size).to(device)
     loss_fn = get_loss_fn(cfg, vocab_size=vocab_size, device=device)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=cfg["training"]["learning_rate"])
+    learning_rate = float(cfg["training"]["learning_rate"])
+    optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
 
     # ------------------------------------------------------------------
     # Training loop

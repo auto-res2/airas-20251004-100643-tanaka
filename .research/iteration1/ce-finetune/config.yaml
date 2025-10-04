@@ -1,0 +1,19 @@
+dataset:
+  max_source_length: 512
+  max_target_length: 128
+  min_article_words: 50
+  name: cnn_dailymail
+  noise_frac: 0.0
+  tokenizer_name: facebook/bart-large-cnn
+  version: 3.0.0
+model:
+  name: facebook/bart-large-cnn
+run_id: ce-finetune
+seed: 42
+task_type: summarization
+training:
+  batch_size: 2
+  epochs: 3
+  learning_rate: 3e-5
+  loss: ce
+  warmup_steps: 500

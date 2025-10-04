@@ -15,10 +15,10 @@ from torch.utils.data import DataLoader, Dataset
 
 # Optional heavy dependencies – import lazily
 try:
-    from datasets import load_dataset
+    from datasets import load_dataset as hf_load_dataset
     from transformers import AutoTokenizer
 except ImportError:  # pragma: no cover – handled via project optional deps
-    load_dataset = None  # type: ignore
+    hf_load_dataset = None  # type: ignore
     AutoTokenizer = None  # type: ignore
 
 # --------------------------------------------------------------------------------------
@@ -73,12 +73,12 @@ class CNNDailyMailDataset(Dataset):
         min_article_words: int = 50,
         noise_frac: float = 0.0,
     ) -> None:
-        if load_dataset is None:
+        if hf_load_dataset is None:
             raise ImportError("datasets & transformers must be installed for real datasets")
 
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_name, use_fast=True)
         # Load HF dataset
-        ds = load_dataset("cnn_dailymail", version, split=split)
+        ds = hf_load_dataset("cnn_dailymail", version)[split]
         # Filter short articles
         ds = ds.filter(lambda x: len(x["article"].split()) >= min_article_words)
         self.ds = ds

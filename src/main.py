@@ -28,7 +28,7 @@ def _tee_stream(stream, log_file):
     """Forward *stream* (stdout/stderr of subprocess) to both terminal and file."""
     for line in iter(stream.readline, b""):
         sys.stdout.buffer.write(line)
-        log_file.buffer.write(line)
+        log_file.write(line)
         sys.stdout.flush()
         log_file.flush()
 
@@ -68,8 +68,13 @@ def main() -> None:
     results_root = Path(args.results_dir)
     if results_root.exists():
         # Allow re-runs: remove previous contents
-        shutil.rmtree(results_root)
-    results_root.mkdir(parents=True)
+        try:
+            shutil.rmtree(results_root, ignore_errors=True)
+        except Exception:
+            # If that fails, try a more forceful approach
+            import subprocess
+            subprocess.run(["rm", "-rf", str(results_root)], check=False)
+    results_root.mkdir(parents=True, exist_ok=True)
 
     # ------------------------------------------------------------------
     # Run sequentially
