@@ -1,0 +1,585 @@
+# config/full_experiment.yaml
+# Full experimental grid for exp-2-seq2seq-finetune-robustness
+
+experiments:
+  - run_id: ce-finetune
+    task_type: summarization
+    dataset:
+      name: cnn_dailymail
+      version: "3.0.0"
+      max_source_length: 512
+      max_target_length: 128
+      min_article_words: 50
+      noise_frac: 0.0
+      tokenizer_name: facebook/bart-large-cnn
+    model:
+      name: facebook/bart-large-cnn
+    training:
+      epochs: 3
+      batch_size: 2          # fits on a single A100 with fp16
+      learning_rate: 3e-5
+      loss: ce
+      warmup_steps: 500
+    seed: 42
+
+  - run_id: ce+tempscale
+    task_type: summarization
+    dataset:
+      name: cnn_dailymail
+      version: "3.0.0"
+      max_source_length: 512
+      max_target_length: 128
+      min_article_words: 50
+      noise_frac: 0.0
+      tokenizer_name: facebook/bart-large-cnn
+    model:
+      name: facebook/bart-large-cnn
+    training:
+      epochs: 3
+      batch_size: 2
+      learning_rate: 3e-5
+      loss: ce+tempscale
+      warmup_steps: 500
+    seed: 42
+
+  - run_id: brier-finetune
+    task_type: summarization
+    dataset:
+      name: cnn_dailymail
+      version: "3.0.0"
+      max_source_length: 512
+      max_target_length: 128
+      min_article_words: 50
+      noise_frac: 0.0
+      tokenizer_name: facebook/bart-large-cnn
+    model:
+      name: facebook/bart-large-cnn
+    training:
+      epochs: 3
+      batch_size: 2
+      learning_rate: 3e-5
+      loss: brier
+      warmup_steps: 500
+    seed: 42
+
+  - run_id: dpsm-warm10
+    task_type: summarization
+    dataset:
+      name: cnn_dailymail
+      version: "3.0.0"
+      max_source_length: 512
+      max_target_length: 128
+      min_article_words: 50
+      noise_frac: 0.0
+      tokenizer_name: facebook/bart-large-cnn
+    model:
+      name: facebook/bart-large-cnn
+    training:
+      epochs: 3
+      batch_size: 2
+      learning_rate: 3e-5
+      loss: dpsm
+      warmup_steps: 1000        # 10% of approx. 10k steps in full training
+      schedule: linear
+    seed: 42
+
+  - run_id: dpsm-warm20
+    task_type: summarization
+    dataset:
+      name: cnn_dailymail
+      version: "3.0.0"
+      max_source_length: 512
+      max_target_length: 128
+      min_article_words: 50
+      noise_frac: 0.0
+      tokenizer_name: facebook/bart-large-cnn
+    model:
+      name: facebook/bart-large-cnn
+    training:
+      epochs: 3
+      batch_size: 2
+      learning_rate: 3e-5
+      loss: dpsm
+      warmup_steps: 2000        # 20% warm-up
+      schedule: linear
+    seed: 42
+
+  # You can append variants for robustness (e.g., noise_frac=0.15) or OOD evaluation as needed.
+  # The above 5 runs constitute the core comparison grid requested.
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

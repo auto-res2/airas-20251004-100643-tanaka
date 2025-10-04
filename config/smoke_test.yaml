@@ -1,0 +1,102 @@
+# config/smoke_test.yaml
+# Lightweight smoke test replicating all run variations on a tiny synthetic dataset.
+
+experiments:
+  - run_id: ce-finetune_smoke
+    task_type: language_modeling
+    dataset:
+      name: dummy
+      vocab_size: 128
+      seq_length: 32
+      num_samples: 256
+    model:
+      name: dummy
+      vocab_size: 128
+      embedding_dim: 64
+      hidden_dim: 128
+    training:
+      epochs: 1
+      batch_size: 8
+      learning_rate: 1e-3
+      loss: ce
+    seed: 42
+
+  - run_id: ce+tempscale_smoke
+    task_type: language_modeling
+    dataset:
+      name: dummy
+      vocab_size: 128
+      seq_length: 32
+      num_samples: 256
+    model:
+      name: dummy
+      vocab_size: 128
+      embedding_dim: 64
+      hidden_dim: 128
+    training:
+      epochs: 1
+      batch_size: 8
+      learning_rate: 1e-3
+      loss: ce+tempscale
+    seed: 42
+
+  - run_id: brier-finetune_smoke
+    task_type: language_modeling
+    dataset:
+      name: dummy
+      vocab_size: 128
+      seq_length: 32
+      num_samples: 256
+    model:
+      name: dummy
+      vocab_size: 128
+      embedding_dim: 64
+      hidden_dim: 128
+    training:
+      epochs: 1
+      batch_size: 8
+      learning_rate: 1e-3
+      loss: brier
+    seed: 42
+
+  - run_id: dpsm-warm10_smoke
+    task_type: language_modeling
+    dataset:
+      name: dummy
+      vocab_size: 128
+      seq_length: 32
+      num_samples: 256
+    model:
+      name: dummy
+      vocab_size: 128
+      embedding_dim: 64
+      hidden_dim: 128
+    training:
+      epochs: 1
+      batch_size: 8
+      learning_rate: 1e-3
+      loss: dpsm
+      warmup_steps: 5
+      schedule: linear
+    seed: 42
+
+  - run_id: dpsm-warm20_smoke
+    task_type: language_modeling
+    dataset:
+      name: dummy
+      vocab_size: 128
+      seq_length: 32
+      num_samples: 256
+    model:
+      name: dummy
+      vocab_size: 128
+      embedding_dim: 64
+      hidden_dim: 128
+    training:
+      epochs: 1
+      batch_size: 8
+      learning_rate: 1e-3
+      loss: dpsm
+      warmup_steps: 10
+      schedule: linear
+    seed: 42
