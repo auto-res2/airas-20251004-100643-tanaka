@@ -1,0 +1,17 @@
+
+Input:
+# Task
+You carefully read the contents of the “Paper Outline” and select one GitHub link from the “GitHub URLs List” that you think is most relevant to the contents.
+# Constraints
+- Output the index number corresponding to the selected GitHub URL.
+- Be sure to select only one GitHub URL.
+- If there is no related GitHub link, output None.
+# Paper Outline
+The core methodology is an LLM-driven objective discovery pipeline. It iteratively prompts an LLM (GPT-4) to propose and implement new PyTorch-based preference optimization loss functions. The process starts by initializing the LLM with established loss functions and their performance as context. For each proposed objective function, validity is checked with unit tests. If valid, an LLM is fine-tuned using this objective, and its performance (e.g., MT-Bench score) is evaluated and fed back to the discovery LLM. This iterative refinement allows the LLM to explore variations and novel formulations. The discovered DiscoPOP (LRML) is mathematically defined as a dynamically weighted sum of the logistic loss and exponential loss, with weights determined by a sigmoid function of the log-ratio difference (rho).
+
+# GitHub URLs List
+['https://github.com/luchris429/DiscoPOP', 'https://github.com/tatsu-lab/alpaca_eval', 'https://github.com/tatsu-lab/alpaca_eval', 'https://github.com/vanderschaarlab/DiscoPOP', 'https://github.com/lm-sys/FastChat', 'https://github.com/tatsu-lab/alpaca_eval']
+Output:
+{
+    "index": 0
+}
