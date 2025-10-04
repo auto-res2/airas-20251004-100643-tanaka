@@ -5,3 +5,94 @@
   publisher = {GitHub},
   url       = {https://github.com/airas-org/airas}
 }
+
+% ===========================================
+% REQUIRED CITATIONS
+% These papers must be cited in the manuscript
+% ===========================================
+
+@article{lu-2024-discovering,
+ abstract = {Offline preference optimization is a key method for enhancing and controlling
+the quality of Large Language Model (LLM) outputs. Typically, preference
+optimization is approached as an offline supervised learning task using
+manually-crafted convex loss functions. While these methods are based on
+theoretical insights, they are inherently constrained by human creativity, so
+the large search space of possible loss functions remains under explored. We
+address this by performing LLM-driven objective discovery to automatically
+discover new state-of-the-art preference optimization algorithms without
+(expert) human intervention. Specifically, we iteratively prompt an LLM to
+propose and implement new preference optimization loss functions based on
+previously-evaluated performance metrics. This process leads to the discovery
+of previously-unknown and performant preference optimization algorithms. The
+best performing of these we call Discovered Preference Optimization (DiscoPOP),
+a novel algorithm that adaptively blends logistic and exponential losses.
+Experiments demonstrate the state-of-the-art performance of DiscoPOP and its
+successful transfer to held-out tasks.},
+ arxiv_url = {https://arxiv.org/pdf/2406.08414v3.pdf},
+ author = {Chris Lu and Samuel Holt and Claudio Fanconi and Alex J. Chan and Jakob Foerster and Mihaela van der Schaar and Robert Tjarko Lange},
+ github_url = {https://github.com/luchris429/DiscoPOP},
+ title = {Discovering Preference Optimization Algorithms with and for Large Language Models},
+ year = {2024}
+}
+
+@article{shao-2024-language,
+ abstract = {Language generation based on maximum likelihood estimation (MLE) has become
+the fundamental approach for text generation. Maximum likelihood estimation is
+typically performed by minimizing the log-likelihood loss, also known as the
+logarithmic score in statistical decision theory. The logarithmic score is
+strictly proper in the sense that it encourages honest forecasts, where the
+expected score is maximized only when the model reports true probabilities.
+Although many strictly proper scoring rules exist, the logarithmic score is the
+only local scoring rule among them that depends exclusively on the probability
+of the observed sample, making it capable of handling the exponentially large
+sample space of natural text. In this work, we propose a straightforward
+strategy for adapting scoring rules to language generation, allowing for
+language modeling with any non-local scoring rules. Leveraging this strategy,
+we train language generation models using two classic strictly proper scoring
+rules, the Brier score and the Spherical score, as alternatives to the
+logarithmic score. Experimental results indicate that simply substituting the
+loss function, without adjusting other hyperparameters, can yield substantial
+improvements in model's generation capabilities. Moreover, these improvements
+can scale up to large language models (LLMs) such as LLaMA-7B and LLaMA-13B.
+Source code: \url{https://github.com/shaochenze/ScoringRulesLM}.},
+ arxiv_url = {https://arxiv.org/pdf/2405.18906v1.pdf},
+ author = {Chenze Shao and Fandong Meng and Yijin Liu and Jie Zhou},
+ title = {Language Generation with Strictly Proper Scoring Rules},
+ year = {2024}
+}
+
+% ===========================================
+% REFERENCE CANDIDATES
+% Additional reference papers for context
+% ===========================================
+
+@article{brown-2020-language,
+ abstract = {Recent work has demonstrated substantial gains on many NLP tasks and
+benchmarks by pre-training on a large corpus of text followed by fine-tuning on
+a specific task. While typically task-agnostic in architecture, this method
+still requires task-specific fine-tuning datasets of thousands or tens of
+thousands of examples. By contrast, humans can generally perform a new language
+task from only a few examples or from simple instructions - something which
+current NLP systems still largely struggle to do. Here we show that scaling up
+language models greatly improves task-agnostic, few-shot performance, sometimes
+even reaching competitiveness with prior state-of-the-art fine-tuning
+approaches. Specifically, we train GPT-3, an autoregressive language model with
+175 billion parameters, 10x more than any previous non-sparse language model,
+and test its performance in the few-shot setting. For all tasks, GPT-3 is
+applied without any gradient updates or fine-tuning, with tasks and few-shot
+demonstrations specified purely via text interaction with the model. GPT-3
+achieves strong performance on many NLP datasets, including translation,
+question-answering, and cloze tasks, as well as several tasks that require
+on-the-fly reasoning or domain adaptation, such as unscrambling words, using a
+novel word in a sentence, or performing 3-digit arithmetic. At the same time,
+we also identify some datasets where GPT-3's few-shot learning still struggles,
+as well as some datasets where GPT-3 faces methodological issues related to
+training on large web corpora. Finally, we find that GPT-3 can generate samples
+of news articles which human evaluators have difficulty distinguishing from
+articles written by humans. We discuss broader societal impacts of this finding
+and of GPT-3 in general.},
+ arxiv_url = {https://arxiv.org/pdf/2005.14165v4.pdf},
+ author = {Tom B. Brown and Benjamin Mann and Nick Ryder and Melanie Subbiah and Jared Kaplan and Prafulla Dhariwal and Arvind Neelakantan and Pranav Shyam and Girish Sastry and Amanda Askell and Sandhini Agarwal and Ariel Herbert-Voss and Gretchen Krueger and Tom Henighan and Rewon Child and Aditya Ramesh and Daniel M. Ziegler and Jeffrey Wu and Clemens Winter and Christopher Hesse and Mark Chen and Eric Sigler and Mateusz Litwin and Scott Gray and Benjamin Chess and Jack Clark and Christopher Berner and Sam McCandlish and Alec Radford and Ilya Sutskever and Dario Amodei},
+ title = {Language models are few-shot learners},
+ year = {2020}
+}
