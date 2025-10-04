@@ -1,0 +1,183 @@
+
+Input:
+You are a cutting-edge AI researcher. Based on the new method described in # New Methods and the experimental policy outlined in # Experiment Strategy, please generate 2 distinct Experiment objects.
+
+# Instructions
+- Generate 2 major experimental lines (Experiment objects) based on the experimental strategy.
+- Each Experiment (identified by experiment_id) represents a different experimental perspective or validation angle.
+- Within each Experiment, run_variations are the variations that will be compared against each other (e.g., ["baseline", "proposed"], ["full-method", "ablation-A", "ablation-B"]).
+- Keep run_variations to 3-5 variations per experiment (including baseline and proposed method) to ensure reasonable execution time and resource usage.
+- Each Experiment should:
+    - Have a unique experiment_id (e.g., "exp-1", "exp-2", "exp-3")
+    - Have a clear description of its objective or hypothesis
+    - Have a list of run_variations that will be compared within this experiment
+    - Cover different aspects of validating the proposed method
+- The experiments should be complementary and cover various validation angles such as:
+    - Main performance validation
+    - Ablation studies
+    - Robustness tests
+    - Comparison with baselines
+    - Hyperparameter sensitivity analysis
+    - Computational efficiency analysis
+- Each experiment will have its own GitHub branch and code.
+- The run_variations within each experiment define different configurations or conditions to test (e.g., different hyperparameters, different baselines, different datasets).
+
+- Design the details of each experiment assuming the execution environment specified in "Experimental Environment."
+- The experimental details should include the following for each experiment:
+    - Machine learning / deep learning models to be used
+        - If necessary, also include baseline models.
+    - Datasets
+    - Dataset preprocessing methods
+    - Data splitting method (train/val/test, cross-validation)
+    - Number of repetitions (number of seeds), averaging method, and selection criteria (best-val, last, early stopping)
+    - Evaluation metrics
+        - Primary and secondary metrics
+        - Examples: Accuracy / F1 / AUROC (classification), RMSE / MAE (regression), mAP (detection), mIoU (segmentation), BLEU / ROUGE / METEOR (generation), NDCG / MRR (ranking), ECE / Brier Score (calibration)
+    - Comparisons
+        - Prior methods (strong baselines, SOTA, simple baselines), etc.
+        - If there are implementation or configuration differences, note the adjustments in footnotes.
+    - Methods for analyzing important hyperparameters (e.g., learning rate, temperature, k, thresholds)
+    - Methods for assessing robustness
+        - Resistance to noise injection, distribution shift (OOD), adversarial perturbations, and domain transfer
+    - Computation of FLOPs, training/inference time, memory usage, and cost / wall-clock time
+    - Example experimental code
+- Avoid excessive redundancy across experiments. When a single experiment can cover multiple validation items, integrate them appropriately.
+- NO-FALLBACK CONSTRAINT: Never suggest using synthetic/dummy/placeholder data.
+- Also provide:
+    - expected_models: A list of specific model names/architectures that will be used across all experiments (e.g., ["ResNet-50", "BERT-base", "GPT-3.5-turbo"])
+    - expected_datasets: A list of specific dataset names that will be used across all experiments (e.g., ["CIFAR-10", "ImageNet", "IMDB Reviews"])
+
+## Output Format
+Please provide:
+- experiments: A list of 2 Experiment objects, each with:
+    - experiment_id: Unique identifier
+    - run_variations: List of variation names/identifiers for this experiment
+    - description: Detailed description including all aspects mentioned in the instructions
+- expected_models: List of model names/architectures
+- expected_datasets: List of dataset names
+
+# Experimental Environment
+NVIDIA A100
+VRAM：80GB
+RAM：2048 GB
+
+# Current Research Method (Target for Experiment Design)
+{
+    "Open Problems": "Strictly proper scoring rules such as the Brier and Spherical scores improve calibration and downstream generation quality, but: 1) they converge noticeably slower than the standard logarithmic (cross-entropy) loss when training from scratch; 2) practitioners must choose between fast learning (log-loss) and better calibration/generation (Brier/Spherical). A minimal change that preserves the speed of log-loss while inheriting the calibration benefits of Brier/Spherical is still missing.",
+    "Methods": "Dynamic Proper-Score Mixing (DPSM)\n1. At every token we compute both the standard cross-entropy (CE) and the Brier loss.\n2. A single scalar weight α_t\\in[0,1] interpolates between them:\n   L_t = (1−α_t)·CE_t + α_t·Brier_t.\n3. α_t is scheduled to rise smoothly from 0 to 1 during training, e.g.\n   α_t = min(1, step / warmup_steps)  (linear)  or  α_t = 0.5·(1−cos(π·step/warmup_steps))  (cosine).\n   • Early training (α≈0): optimisation follows CE → rapid likelihood fitting.\n   • Late training (α≈1): optimisation follows Brier → improved calibration & generation quality.\n4. No extra hyper-parameters except warmup_steps; keeps the objective strictly proper throughout (convex combination of two strictly proper scores).",
+    "Experimental Setup": "Dataset: WikiText-2 (small-scale) and CNN/DailyMail summarisation (mid-scale).\nModels:  \n• GPT-2-small trained from scratch on WikiText-2.  \n• BART-base fine-tuned on CNN/DailyMail.\nBaselines: (i) CE only, (ii) Brier only, (iii) DPSM (ours).\nMetrics:  \n• Perplexity (PPL) for language modelling.  \n• Expected Calibration Error (ECE, 10 bins).  \n• ROUGE-1/2/L for summarisation.\nTraining details: identical optimiser & learning-rate schedule for all runs; DPSM uses warmup_steps = 10% of total steps.",
+    "Experimental Code": "import torch, torch.nn.functional as F\nclass DPSMLoss(torch.nn.Module):\n    def __init__(self, vocab_size:int, warmup_steps:int=10000, schedule:str='linear'):\n        super().__init__()\n        self.vocab_size = vocab_size\n        self.warmup = warmup_steps\n        self.schedule = schedule\n        self.register_buffer('global_step', torch.tensor(0.))\n    def _alpha(self):\n        s = self.global_step\n        if self.schedule=='linear':\n            return torch.clamp(s / self.warmup, 0., 1.)\n        # cosine schedule\n        x = torch.clamp(s / self.warmup, 0., 1.)\n        return 0.5 * (1 - torch.cos(torch.pi * x))\n    def forward(self, logits, targets):\n        self.global_step += 1\n        log_p = F.log_softmax(logits, -1)              # [B,T,V]\n        p = log_p.exp()\n        ce = F.nll_loss(log_p.view(-1,log_p.size(-1)), targets.view(-1), reduction='none')\n        one_hot = F.one_hot(targets, self.vocab_size).type_as(p)\n        brier = ((p - one_hot)**2).sum(-1).view_as(ce)\n        alpha = self._alpha()\n        loss = (1-alpha)*ce + alpha*brier\n        return loss.mean()",
+    "Expected Result": "1. WikiText-2: DPSM matches CE perplexity after full training (±0.2 PPL) while reducing ECE by ~35% and converging 1.8× faster than pure Brier.\n2. CNN/DailyMail: DPSM improves ROUGE-L by ≈0.7 points over CE and ≈0.3 over Brier, with noticeably better calibration (-30% ECE).\n3. Training curves show CE-like rapid loss drop in early epochs and Brier-like calibration gains in later epochs.",
+    "Expected Conclusion": "A single-line interpolation between cross-entropy and Brier scores delivers the best of both worlds: fast convergence and superior calibration/generation quality. Because it is strictly proper, easy to implement, and hyper-parameter-light (one warm-up length), DPSM can be dropped into any existing LLM training pipeline with minimal code change yet yields measurable accuracy and reliability gains."
+}
+
+# Experiment Strategy
+Unified Experimental Strategy for Validating Dynamic Proper-Score Mixing (DPSM)
+
+1. Core Hypotheses to Validate
+   H1 – Performance: DPSM attains the same or better task performance (likelihood or downstream scores) as pure cross-entropy (CE).
+   H2 – Calibration: DPSM matches or surpasses the calibration of pure Brier/Spherical scores.
+   H3 – Convergence Speed: DPSM converges almost as fast as CE and markedly faster than Brier/Spherical.
+   H4 – Efficiency: DPSM adds ≤2 % computational overhead (memory, GPU-hours) relative to CE.
+   H5 – Robustness & Generalization: DPSM’s benefits hold across model sizes, tasks, datasets, optimisation settings, and random seeds.
+
+2. Validation Dimensions & Metrics
+   a. Quantitative Task Quality
+      • Language modelling: Perplexity (PPL), NLL
+      • Seq-to-seq (summarisation, translation, code): ROUGE/BLEU/CodeBLEU
+   b. Calibration
+      • ECE (10 & 100 bins), Brier score, reliability diagrams
+   c. Learning Dynamics & Efficiency
+      • Convergence curves (steps vs PPL/ECE) and wall-clock time
+      • GPU utilisation, peak memory, throughput (tokens/s)
+   d. Robustness & Generalization
+      • Out-of-domain (OOD) datasets, different seeds (≥3), noisy labels (synthetic corruption)
+   e. Qualitative Analysis
+      • Human preference ratings on generated text, diversity (Distinct-n)
+
+3. Comparison Grid (applied to every experiment)
+   Baselines:
+   • CE only (fast learning)
+   • Brier only (strong calibration)
+   • CE + temperature scaling post-hoc (industry standard fix)
+   • Label smoothing & focal loss (alternative in-loss fixes)
+   Ablations:
+   • DPSM with fixed α (e.g., 0.25, 0.5, 0.75)
+   • DPSM with linear vs cosine schedule
+   • Warm-up length sweep (5 %, 10 %, 20 %)
+
+4. Experimental Angles
+   Angle 1 – From-scratch Training (small/medium models): proves H1–H4 under full optimisation control.
+   Angle 2 – Fine-tuning (larger pretrained checkpoints): tests plug-and-play practicality and H5.
+   Angle 3 – Stress Tests: OOD data, corrupted labels, low-resource splits; probes robustness.
+   Angle 4 – Scaling: repeat Angle 1 at three model scales (≈125 M, 355 M, 1.3 B params) to expose trends.
+   Angle 5 – Efficiency Audit: profile a fixed batch of 2 k tokens on the A100 for every loss variant.
+
+5. Success Criteria (must satisfy simultaneously)
+   • Task quality: ≤0.3 PPL gap or ≥+0.3 ROUGE/BLEU relative to CE; never worse than both CE & Brier.
+   • Calibration: ≥25 % ECE reduction vs CE and within 5 % of Brier.
+   • Convergence: reach 95 % of final CE performance in ≤110 % of CE wall-clock time and in ≤60 % of Brier time.
+   • Efficiency: memory overhead ≤500 MB; throughput drop ≤2 %.
+   • Robustness: advantages hold (same inequality signs) across ≥75 % of robustness settings and seeds.
+
+6. Experimental Logistics
+   • Hardware: single or multi-A100 nodes leveraging 80 GB VRAM and 2 TB RAM; mixed-precision (bfloat16) everywhere.
+   • Repetition: 3 seeds per configuration; report mean±stdev; statistical tests (paired t-test p<0.05).
+   • Tracking: use Weights & Biases for unified logging; standardised training scripts with a config flag selecting the loss.
+   • Budget: cap total GPU time at 10 % above the equivalent CE-only research campaign by prioritising mid-scale runs and pruning under-performing ablations early.
+
+7. Reporting Template (uniform across papers/sections)
+   1. Learning curves (PPL & ECE) with wall-clock on x-axis
+   2. Final metrics table (means, stdev, significance stars)
+   3. Efficiency table (time/step, memory, tokens/s)
+   4. Reliability diagrams (CE vs DPSM)
+   5. Qualitative snippet comparison & human study results
+
+This unified, multi-angle strategy ensures that every experiment—regardless of dataset, model, or training regime—jointly interrogates DPSM’s main claims: fast learning like CE, calibration like Brier, negligible overhead, and broad robustness.
+
+---
+
+
+# Reference Information from Previous Iteration
+
+Output:
+{
+    "experiments": [
+        {
+            "experiment_id": "exp-1-language-modelling-scaling",
+            "run_variations": [
+                "ce-baseline",
+                "brier-baseline",
+                "dpsm-linear",
+                "dpsm-cosine",
+                "dpsm-fixed-alpha0.5"
+            ],
+            "description": "Objective / hypothesis: Validate H1–H4 on from-scratch language-model training across three model scales. Show that DPSM preserves CE-level perplexity, approaches Brier-level calibration, converges almost as fast as CE, and adds <2 % overhead.\n\nModels: GPT-2-small (125 M), GPT-2-medium (355 M), GPT-2-large (774 M).\n\nDatasets: WikiText-103 (main), WikiText-2 (sanity check). Both are pre-tokenised with the standard GPT-2 BPE (50 502 tokens).\n\nPre-processing:  \n• Strip empty lines, normalise Unicode, lowercase only for WikiText-103-LM-bench variant.  \n• Pack into 1024-token sequences with EOS delimiter; drop remainder <32 tokens.  \n• Mixed-precision (bfloat16) token/grad storage.\n\nData splitting: Official WikiText-103 train/valid/test. No further shuffling. Token-based deterministic split.\n\nRepetitions: 3 random seeds per variation. Report mean±std. Selection criterion: best validation perplexity checkpoint (early stopping patience = 5 epochs).\n\nEvaluation metrics:  \nPrimary – Perplexity (PPL, ↓).  \nSecondary – NLL, ECE (10 & 100 bins), Brier score, Spherical score, expected recursion depth (for analysis).  \nEfficiency – tokens/s, wall-clock to 95 % final PPL, peak GPU memory, FLOPs/step.\n\nComparisons:  \n• ce-baseline – standard cross-entropy.  \n• brier-baseline – pure Brier.  \n• dpsm-linear – α schedule linear warm-up 10 % steps.  \n• dpsm-cosine – cosine warm-up 10 %.  \n• dpsm-fixed-alpha0.5 – α constant 0.5 from step 0 (ablation).\n\nHyper-parameter sensitivity: sweep warmup_steps ∈ {5 %, 10 %, 20 %} on GPT-2-small using Population Based Training; record PPL/ECE; include best curve in Appendix.\n\nRobustness assessments:  \n• Label noise: randomly flip 10 % of tokens within each batch for 5 % of training steps.  \n• OOD generalisation: evaluate trained checkpoints on BooksCorpus-held-out split.  \n• Seed variance: report variance inflation factor across 3 seeds.  \nAll robustness metrics reported as deltas vs clean CE baseline.\n\nEfficiency analysis: Use PyTorch profiler + NVIDIA Nsight to log CUDA kernel time, memory, FLOPs for 2 000-token batch. Summarise mean overhead per step.\n\nExample code:\n```\n# loss_selector.py\nif args.loss == 'ce':\n    criterion = torch.nn.CrossEntropyLoss()\nelif args.loss == 'brier':\n    criterion = BrierLoss(vocab)\nelif args.loss.startswith('dpsm'):\n    schedule = 'linear' if 'linear' in args.loss else 'cosine'\n    fixed = 0.5 if 'fixed' in args.loss else None\n    criterion = DPSMLoss(vocab, warmup_steps=int(0.1*total_steps),\n                         schedule=schedule, fixed_alpha=fixed)\n```\nExpected outcome: dpsm-linear and dpsm-cosine match CE PPL within ±0.3 while cutting ECE by ≥30 %; converge in ≤1.1× CE wall-clock and ≤0.6× Brier time; overhead <1.5 % memory / <2 % throughput drop."
+        },
+        {
+            "experiment_id": "exp-2-seq2seq-finetune-robustness",
+            "run_variations": [
+                "ce-finetune",
+                "ce+tempscale",
+                "brier-finetune",
+                "dpsm-warm10",
+                "dpsm-warm20"
+            ],
+            "description": "Objective / hypothesis: Demonstrate plug-and-play benefit of DPSM during fine-tuning (H1, H2, H5) and test robustness to domain shift and noisy references.\n\nModels: BART-large (406 M) and PEGASUS-large (568 M) pretrained checkpoints.\n\nDatasets: CNN/DailyMail (train for fine-tune), XSum (zero-shot transfer), and distorted CNN/DM with 15 % summary-swap noise for robustness.\n\nPre-processing:  \n• SentencePiece tokenisation (pretrained model vocab, 1024 tokens max src, 128 tokens max tgt).  \n• Remove articles shorter than 50 words.  \n• For noise study, with probability 0.15 replace reference summary with another random summary in the same batch.\n\nData split: CNN/DM official splits. XSum only used for evaluation (OOD).  \nCross-validation: 5-fold on training set for hyper-param searches, but main results use full train.\n\nRepetitions: 3 seeds. Selection: last checkpoint (no early stopping) to mimic production; report also best-val for completeness.\n\nEvaluation metrics:  \nPrimary – ROUGE-1/2/L (F1, ↑).  \nSecondary – BERTScore, ECE (token-level), Brier score.  \nHuman eval – 200 random articles: pairwise preference test (fluency + informativeness).  \nEfficiency – sec/step, memory, sentences/s.\n\nComparisons & run_variations:  \n1. ce-finetune – vanilla negative log-likelihood.  \n2. ce+tempscale – CE followed by post-hoc temperature on validation (industry baseline).  \n3. brier-finetune – optimise pure Brier.  \n4. dpsm-warm10 – DPSM, 10 % linear warm-up.  \n5. dpsm-warm20 – DPSM, 20 % linear warm-up (sensitivity).\n\nHyper-parameter analysis: grid over learning_rate {1e-5, 3e-5, 5e-5}, label_smoothing {0, 0.1}, and warmup_steps {10 %, 20 %, 30 %} for dpsm-warm*. Record ROUGE/ECE heatmaps.\n\nRobustness:  \n• Domain shift – evaluate CNN/DM-trained models on XSum (zero-shot).  \n• Noisy labels – train on 15 % swapped summaries; measure ROUGE drop Δ.  \n• Adversarial input – apply TextFooler attacks on 500 CNN/DM validation articles; compute ROUGE and calibration under attack.\n\nEfficiency audit: identical batch size (64 × 1024 tokens) on single A100; profile training for 1 000 steps. Report average forward+backward time, GPU utilisation, energy (via nvidia-smi).\n\nExample code:\n```\nmodel = BartForConditionalGeneration.from_pretrained('facebook/bart-large')\nloss_variant = args.variant  # 'ce', 'brier', 'dpsm'\nif loss_variant == 'ce+tempscale':\n    model, T = finetune_ce_then_calibrate(model, train_loader, val_loader)\nelse:\n    criterion = pick_loss(loss_variant, vocab_size=model.config.vocab_size)\n    trainer = Seq2SeqTrainer(model, criterion, ...)\n```\nExpected outcome: dpsm-warm10 improves ROUGE-L by ≥0.5 over ce-finetune and ≥0.2 over brier-finetune, cuts ECE by ≥25 % vs CE, and maintains ≤2 % throughput drop. In noisy and OOD settings, DPSM variants degrade ≤70 % as much as CE, confirming robustness."
+        }
+    ],
+    "expected_models": [
+        "GPT-2-small",
+        "GPT-2-medium",
+        "GPT-2-large",
+        "BART-large",
+        "PEGASUS-large"
+    ],
+    "expected_datasets": [
+        "WikiText-103",
+        "WikiText-2",
+        "CNN/DailyMail",
+        "XSum",
+        "BooksCorpus"
+    ]
+}
