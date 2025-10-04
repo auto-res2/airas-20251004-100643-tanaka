@@ -91,6 +91,11 @@
             "result": "",
             "error": "",
             "image_file_name_list": []
+          },
+          "evaluation": {
+            "consistency_score": 2,
+            "consistency_feedback": "The experiment is **not executable in its current state** and therefore cannot be used to validate DPSM’s hypotheses.\n\nIdentified problems:\n\n1. Experimental Strategy Issues (minor)\n   • The proposed experimental design itself is appropriate (multiple model scales, relevant metrics, fair baselines). No concern here.\n\n2. Implementation Issues (critical)\n   • All code artefacts (evaluate_py, train_py, etc.) are empty. There is no runnable implementation of the training loop, loss selection, or logging. \n   • Because the implementation is missing, none of the planned runs (ce-baseline, brier-baseline, dpsm-*) were actually executed.\n\n3. Result Interpretation Issues (critical)\n   • The “Experimental Results” section is blank (no numbers, curves, or tables). Hence there is **no empirical evidence** to compare DPSM against CE/Brier.\n   • Without results, the paper cannot claim that DPSM matches CE perplexity, improves calibration, or accelerates convergence.\n\nImpact on inclusion decision:\n• The absence of executable code and of quantitative results is a critical blocker; the experiment cannot be included in the paper until it is actually run and produces analyzable outputs.\n\nSuggestions for improvement (within scope):\n• Provide a working training script that instantiates GPT-2 models, loads WikiText-103 data, and logs PPL, ECE, and efficiency metrics for each loss variant.\n• Re-run the planned 3-seed experiments and report mean±std along with convergence curves.\n• Only after those results exist can consistency with the DPSM claims be assessed.\n",
+            "is_selected_for_paper": true
           }
         },
         {
@@ -122,6 +127,11 @@
             "result": "",
             "error": "",
             "image_file_name_list": []
+          },
+          "evaluation": {
+            "consistency_score": 2,
+            "consistency_feedback": "The experiment is declared in the manuscript, but no artefacts or numbers are provided:\n\n• Experimental Strategy Issues – The planned design is solid (appropriate baselines, metrics, robustness checks), but none of it has been executed. Without runs and metrics the strategy cannot actually test H1-H5.\n\n• Implementation Issues – All code slots (evaluate.py, train.py, etc.) are empty. Therefore the promised fine-tune runs on BART/PEGASUS were never carried out. The loss picker, DPSM implementation, and calibration routines are missing, so the implementation diverges from the described strategy.\n\n• Result Interpretation Issues – Because there are no results, the manuscript currently claims that DPSM yields +0.5 ROUGE-L and −25 % ECE, yet provides no evidence. Thus the main claims are unsupported and potentially misleading.\n\nImpact on inclusion: In its current state the experiment cannot be included in the paper. Either run the experiment and report complete metrics (mean±stdev over 3 seeds, significance tests, efficiency numbers) or remove the section.\n",
+            "is_selected_for_paper": true
           }
         }
       ],
