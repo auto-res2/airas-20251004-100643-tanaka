@@ -1,0 +1,15 @@
+dataset:
+  name: wikitext-2
+  seq_length: 1024
+model:
+  from_pretrained: false
+  name: gpt2-medium
+run_id: gpt2-medium_dpsm-linear
+seed: 43
+task_type: language_modeling
+training:
+  batch_size: 8
+  epochs: 10
+  learning_rate: 5e-4
+  loss: dpsm-linear
+  warmup_steps: 1000

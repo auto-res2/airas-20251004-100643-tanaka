@@ -132,8 +132,8 @@ class DPSMLoss(nn.Module):
     def forward(self, logits: torch.Tensor, targets: torch.Tensor):
         self.global_step += 1.0
         ce = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1), reduction="none")
-        p = logits.softmax(-1)
-        oh = F.one_hot(targets, logits.size(-1)).type_as(p)
+        p = logits.softmax(-1).view(-1, logits.size(-1))
+        oh = F.one_hot(targets.view(-1), logits.size(-1)).type_as(p)
         brier = (p - oh).pow(2).sum(-1)
         alpha = self._alpha()
         loss = (1 - alpha) * ce + alpha * brier

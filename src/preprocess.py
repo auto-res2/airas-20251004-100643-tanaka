@@ -13,7 +13,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 
 # HuggingFace
-from datasets import load_dataset
+from datasets import load_dataset as hf_load_dataset
 from transformers import GPT2TokenizerFast
 
 # --------------------------------------------------------------------------------------
@@ -92,7 +92,7 @@ def _load_wikitext(name: str, seq_length: int) -> Tuple[Dataset, Dataset, int]:
     if name not in variant_map:
         raise ValueError(f"Unsupported WikiText dataset: {name}")
 
-    raw_ds = load_dataset("wikitext", variant_map[name])
+    raw_ds = hf_load_dataset("wikitext", variant_map[name])
     tokenizer = _get_tokenizer()
 
     def _tokenise(split_name: str) -> torch.Tensor:
@@ -103,9 +103,7 @@ def _load_wikitext(name: str, seq_length: int) -> Tuple[Dataset, Dataset, int]:
         eos_id = tokenizer.eos_token_id
         ids: List[int] = list(
             itertools.chain.from_iterable(
-                itertools.chain.from_iterable(
-                    [(tokenizer.encode(t, add_special_tokens=False) + [eos_id]) for t in texts]
-                )
+                [(tokenizer.encode(t, add_special_tokens=False) + [eos_id]) for t in texts]
             )
         )
         return torch.tensor(ids, dtype=torch.long)

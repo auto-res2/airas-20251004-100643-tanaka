@@ -106,25 +106,36 @@ def evaluate(
     """Return perplexity & ECE on the supplied validation / test split."""
 
     model.eval()
+    total_ce_loss = 0.0
+    total_tokens = 0
     all_logits: List[torch.Tensor] = []
     all_targets: List[torch.Tensor] = []
+
     with torch.no_grad():
         for batch in data_loader:
             inputs, targets = [x.to(device) for x in batch]
             logits = model(inputs)
             _ = loss_fn(logits, targets)  # keep internal step counters consistent
-            all_logits.append(logits.detach())
-            all_targets.append(targets.detach())
 
+            # Compute CE loss incrementally for perplexity
+            batch_ce_loss = F.cross_entropy(
+                logits.view(-1, logits.size(-1)),
+                targets.view(-1),
+                reduction="sum"
+            )
+            total_ce_loss += batch_ce_loss.item()
+            total_tokens += targets.numel()
+
+            # Move to CPU and store for ECE computation
+            all_logits.append(logits.cpu())
+            all_targets.append(targets.cpu())
+
+    # Compute perplexity
+    ppl = torch.exp(torch.tensor(total_ce_loss / total_tokens)).item()
+
+    # Compute ECE on CPU to save GPU memory
     logits = torch.cat(all_logits, dim=0)
     targets = torch.cat(all_targets, dim=0)
-
-    ppl = torch.exp(
-        F.cross_entropy(
-            logits.view(-1, logits.size(-1)), targets.view(-1), reduction="mean"
-        )
-    ).item()
-
     probs = logits.softmax(-1).view(-1, logits.size(-1))
     labels = targets.view(-1)
     ece = expected_calibration_error(probs, labels, num_bins=10).item()
@@ -169,7 +180,7 @@ def main() -> None:
     # ------------------------------------------------------------------
     model = get_model(cfg, vocab_size=vocab_size).to(device)
     loss_fn = get_loss_fn(cfg, vocab_size=vocab_size, device=device)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=cfg["training"]["learning_rate"])
+    optimizer = torch.optim.AdamW(model.parameters(), lr=float(cfg["training"]["learning_rate"]))
 
     # ------------------------------------------------------------------
     # Training loop

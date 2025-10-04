@@ -1,0 +1,81 @@
+=== [PHASE 2/2] Full experiment start Sat Oct  4 10:45:29 AM UTC 2025 ===
+Running experiment 'gpt2-small_ce-baseline'
+  • Task       : language_modeling
+  • Dataset    : wikitext-2
+  • Model      : gpt2-small
+  • Loss       : ce
+  • Epochs     : 10
+  • Batch size : 16
+
+{"run_id": "gpt2-small_ce-baseline", "epoch_metrics": [{"epoch": 1, "train_loss": 7.109691178717581, "val_ppl": 652.912353515625, "val_ece": 0.014920348301529884}, {"epoch": 2, "train_loss": 6.182689861375458, "val_ppl": 440.1570129394531, "val_ece": 0.012673546560108662}, {"epoch": 3, "train_loss": 5.8149488766988116, "val_ppl": 373.42156982421875, "val_ece": 0.017077062278985977}, {"epoch": 4, "train_loss": 5.565572855423908, "val_ppl": 338.0093078613281, "val_ece": 0.02417246252298355}, {"epoch": 5, "train_loss": 5.355524932446123, "val_ppl": 308.4554443359375, "val_ece": 0.01682661846280098}, {"epoch": 6, "train_loss": 5.158922928531154, "val_ppl": 291.508544921875, "val_ece": 0.031166832894086838}, {"epoch": 7, "train_loss": 4.9701186199577485, "val_ppl": 276.1240234375, "val_ece": 0.042065445333719254}, {"epoch": 8, "train_loss": 4.789998009091332, "val_ppl": 267.31341552734375, "val_ece": 0.04258570447564125}, {"epoch": 9, "train_loss": 4.613516246380449, "val_ppl": 257.55413818359375, "val_ece": 0.04422711953520775}, {"epoch": 10, "train_loss": 4.441767737978981, "val_ppl": 251.7136688232422, "val_ece": 0.0549672432243824}], "final": {"val_ppl": 251.7136688232422, "val_ece": 0.0549672432243824, "wall_clock": 1701.287211894989}}
+Running experiment 'gpt2-small_brier-baseline'
+  • Task       : language_modeling
+  • Dataset    : wikitext-2
+  • Model      : gpt2-small
+  • Loss       : brier
+  • Epochs     : 10
+  • Batch size : 16
+
+{"run_id": "gpt2-small_brier-baseline", "epoch_metrics": [{"epoch": 1, "train_loss": 0.9856166304374228, "val_ppl": 5993.8955078125, "val_ece": 0.00832301564514637}, {"epoch": 2, "train_loss": 0.94772446682664, "val_ppl": 5338.70751953125, "val_ece": 0.022017015144228935}, {"epoch": 3, "train_loss": 0.9405844150757303, "val_ppl": 4734.62109375, "val_ece": 0.01601439155638218}, {"epoch": 4, "train_loss": 0.9353709472279971, "val_ppl": 4372.94140625, "val_ece": 0.023783432319760323}, {"epoch": 5, "train_loss": 0.9311455889623992, "val_ppl": 3870.115966796875, "val_ece": 0.024002518504858017}, {"epoch": 6, "train_loss": 0.9266859357859812, "val_ppl": 3739.308349609375, "val_ece": 0.024623073637485504}, {"epoch": 7, "train_loss": 0.9225813020654277, "val_ppl": 3750.66943359375, "val_ece": 0.026720594614744186}, {"epoch": 8, "train_loss": 0.9177135221001242, "val_ppl": 3569.78173828125, "val_ece": 0.03521706163883209}, {"epoch": 9, "train_loss": 0.9116510420429463, "val_ppl": 3038.885498046875, "val_ece": 0.03353963792324066}, {"epoch": 10, "train_loss": 0.9029498890954621, "val_ppl": 2987.65478515625, "val_ece": 0.048186592757701874}], "final": {"val_ppl": 2987.65478515625, "val_ece": 0.048186592757701874, "wall_clock": 1755.7313125133514}}
+Running experiment 'gpt2-small_dpsm-linear'
+  • Task       : language_modeling
+  • Dataset    : wikitext-2
+  • Model      : gpt2-small
+  • Loss       : dpsm-linear
+  • Epochs     : 10
+  • Batch size : 16
+
+{"run_id": "gpt2-small_dpsm-linear", "epoch_metrics": [{"epoch": 1, "train_loss": 7.1248445445988455, "val_ppl": 1453.667724609375, "val_ece": 0.007330020889639854}, {"epoch": 2, "train_loss": 5.5991357427065065, "val_ppl": 826.5144653320312, "val_ece": 0.02648756466805935}, {"epoch": 3, "train_loss": 4.261684636680448, "val_ppl": 580.4390258789062, "val_ece": 0.0055403015576303005}, {"epoch": 4, "train_loss": 3.2098961557660783, "val_ppl": 489.32855224609375, "val_ece": 0.02035674825310707}, {"epoch": 5, "train_loss": 2.2991641581463975, "val_ppl": 439.83221435546875, "val_ece": 0.0111100934445858}, {"epoch": 6, "train_loss": 1.4549209479572012, "val_ppl": 420.7598571777344, "val_ece": 0.014999529346823692}, {"epoch": 7, "train_loss": 0.9140195477576483, "val_ppl": 435.68438720703125, "val_ece": 0.023347141221165657}, {"epoch": 8, "train_loss": 0.9035069273442639, "val_ppl": 443.9424743652344, "val_ece": 0.0253458134829998}, {"epoch": 9, "train_loss": 0.901089562039797, "val_ppl": 453.6566162109375, "val_ece": 0.03165847808122635}, {"epoch": 10, "train_loss": 0.898662437792538, "val_ppl": 462.62603759765625, "val_ece": 0.030101776123046875}], "final": {"val_ppl": 462.62603759765625, "val_ece": 0.030101776123046875, "wall_clock": 1796.4341197013855}}
+Running experiment 'gpt2-small_dpsm-cosine'
+  • Task       : language_modeling
+  • Dataset    : wikitext-2
+  • Model      : gpt2-small
+  • Loss       : dpsm-cosine
+  • Epochs     : 10
+  • Batch size : 16
+
+{"run_id": "gpt2-small_dpsm-cosine", "epoch_metrics": [{"epoch": 1, "train_loss": 6.982156390235538, "val_ppl": 634.8384399414062, "val_ece": 0.01141776330769062}, {"epoch": 2, "train_loss": 5.455705506461007, "val_ppl": 438.66998291015625, "val_ece": 0.012119426392018795}, {"epoch": 3, "train_loss": 4.114229940232777, "val_ppl": 374.6715393066406, "val_ece": 0.01559950690716505}, {"epoch": 4, "train_loss": 2.781072730109805, "val_ppl": 340.3399963378906, "val_ece": 0.019423648715019226}, {"epoch": 5, "train_loss": 1.6888405133266837, "val_ppl": 323.4936828613281, "val_ece": 0.012224432080984116}, {"epoch": 6, "train_loss": 1.037345688359267, "val_ppl": 325.3692626953125, "val_ece": 0.02550821378827095}, {"epoch": 7, "train_loss": 0.881672870950634, "val_ppl": 338.4158630371094, "val_ece": 0.029589492827653885}, {"epoch": 8, "train_loss": 0.8770972105110584, "val_ppl": 348.599365234375, "val_ece": 0.033486999571323395}, {"epoch": 9, "train_loss": 0.8725404281194519, "val_ppl": 357.4034423828125, "val_ece": 0.047268860042095184}, {"epoch": 10, "train_loss": 0.8680121716187925, "val_ppl": 366.1746826171875, "val_ece": 0.04704223945736885}], "final": {"val_ppl": 366.1746826171875, "val_ece": 0.04704223945736885, "wall_clock": 1796.0981628894806}}
+Running experiment 'gpt2-small_dpsm-fixed-alpha0.5'
+  • Task       : language_modeling
+  • Dataset    : wikitext-2
+  • Model      : gpt2-small
+  • Loss       : dpsm-fixed-alpha0.5
+  • Epochs     : 10
+  • Batch size : 16
+
+{"run_id": "gpt2-small_dpsm-fixed-alpha0.5", "epoch_metrics": [{"epoch": 1, "train_loss": 4.058427046756355, "val_ppl": 693.889404296875, "val_ece": 0.010723128914833069}, {"epoch": 2, "train_loss": 3.5845072966854588, "val_ppl": 464.90087890625, "val_ece": 0.011577120050787926}, {"epoch": 3, "train_loss": 3.399003734393996, "val_ppl": 390.76068115234375, "val_ece": 0.01923740655183792}, {"epoch": 4, "train_loss": 3.266261269446133, "val_ppl": 350.87506103515625, "val_ece": 0.02646087296307087}, {"epoch": 5, "train_loss": 3.1572399301593808, "val_ppl": 313.6616516113281, "val_ece": 0.013693933375179768}, {"epoch": 6, "train_loss": 3.056890630397667, "val_ppl": 296.91339111328125, "val_ece": 0.0343766063451767}, {"epoch": 7, "train_loss": 2.9580388150247585, "val_ppl": 275.6396484375, "val_ece": 0.039230212569236755}, {"epoch": 8, "train_loss": 2.861426285334996, "val_ppl": 259.5544738769531, "val_ece": 0.04626845195889473}, {"epoch": 9, "train_loss": 2.7629673091732725, "val_ppl": 251.72926330566406, "val_ece": 0.048357781022787094}, {"epoch": 10, "train_loss": 2.667723748148704, "val_ppl": 237.71595764160156, "val_ece": 0.046042609959840775}], "final": {"val_ppl": 237.71595764160156, "val_ece": 0.046042609959840775, "wall_clock": 1795.877539396286}}
+Running experiment 'gpt2-medium_ce-baseline'
+  • Task       : language_modeling
+  • Dataset    : wikitext-2
+  • Model      : gpt2-medium
+  • Loss       : ce
+  • Epochs     : 10
+  • Batch size : 8
+
+{"run_id": "gpt2-medium_ce-baseline", "epoch_metrics": [{"epoch": 1, "train_loss": 7.201487132481167, "val_ppl": 708.947998046875, "val_ece": 0.011205481365323067}, {"epoch": 2, "train_loss": 6.271830703125519, "val_ppl": 487.0412292480469, "val_ece": 0.00692036421969533}, {"epoch": 3, "train_loss": 5.939657052357991, "val_ppl": 408.76043701171875, "val_ece": 0.011887617409229279}, {"epoch": 4, "train_loss": 5.695666866237614, "val_ppl": 368.2729797363281, "val_ece": 0.020960858091711998}, {"epoch": 5, "train_loss": 5.504842265122602, "val_ppl": 341.7980041503906, "val_ece": 0.017517635598778725}, {"epoch": 6, "train_loss": 5.385221080715153, "val_ppl": 331.303466796875, "val_ece": 0.01888616569340229}, {"epoch": 7, "train_loss": 5.338218635442305, "val_ppl": 358.41583251953125, "val_ece": 0.030271828174591064}, {"epoch": 8, "train_loss": 5.551546930455837, "val_ppl": 489.2270812988281, "val_ece": 0.02092612348496914}, {"epoch": 9, "train_loss": 6.078606798535302, "val_ppl": 584.309326171875, "val_ece": 0.017375515773892403}, {"epoch": 10, "train_loss": 6.158811616248825, "val_ppl": 622.9970092773438, "val_ece": 0.005181275308132172}], "final": {"val_ppl": 622.9970092773438, "val_ece": 0.005181275308132172, "wall_clock": 4244.390407323837}}
+Running experiment 'gpt2-medium_brier-baseline'
+  • Task       : language_modeling
+  • Dataset    : wikitext-2
+  • Model      : gpt2-medium
+  • Loss       : brier
+  • Epochs     : 10
+  • Batch size : 8
+
+{"run_id": "gpt2-medium_brier-baseline", "epoch_metrics": [{"epoch": 1, "train_loss": 0.9935617231998314, "val_ppl": 7659.6513671875, "val_ece": 0.0060257562436163425}, {"epoch": 2, "train_loss": 0.9620205693098963, "val_ppl": 5156.15771484375, "val_ece": 0.00977951381355524}, {"epoch": 3, "train_loss": 0.9502816463814301, "val_ppl": 4403.78076171875, "val_ece": 0.005744373891502619}, {"epoch": 4, "train_loss": 0.9454046149237626, "val_ppl": 3977.78271484375, "val_ece": 0.009589603170752525}, {"epoch": 5, "train_loss": 0.9421025324029987, "val_ppl": 3639.5263671875, "val_ece": 0.014488251879811287}, {"epoch": 6, "train_loss": 0.9395038337529111, "val_ppl": 3264.03125, "val_ece": 0.012981980107724667}, {"epoch": 7, "train_loss": 0.9369811123731185, "val_ppl": 2935.086669921875, "val_ece": 0.02045179344713688}, {"epoch": 8, "train_loss": 0.9336236484196722, "val_ppl": 2005.0897216796875, "val_ece": 0.01722683198750019}, {"epoch": 9, "train_loss": 0.9275262193614934, "val_ppl": 1873.29248046875, "val_ece": 0.027491336688399315}, {"epoch": 10, "train_loss": 0.9235004287998693, "val_ppl": 1762.818115234375, "val_ece": 0.020386001095175743}], "final": {"val_ppl": 1762.818115234375, "val_ece": 0.020386001095175743, "wall_clock": 4305.6220779418945}}
+Running experiment 'gpt2-medium_dpsm-linear'
+  • Task       : language_modeling
+  • Dataset    : wikitext-2
+  • Model      : gpt2-medium
+  • Loss       : dpsm-linear
+  • Epochs     : 10
+  • Batch size : 8
+
+{"run_id": "gpt2-medium_dpsm-linear", "epoch_metrics": [{"epoch": 1, "train_loss": 6.357095020968898, "val_ppl": 800.60986328125, "val_ece": 0.00446735043078661}, {"epoch": 2, "train_loss": 3.8057812687491075, "val_ppl": 510.5131530761719, "val_ece": 0.010903186164796352}, {"epoch": 3, "train_loss": 1.9511039346253791, "val_ppl": 436.9631042480469, "val_ece": 0.009954213164746761}, {"epoch": 4, "train_loss": 0.9155757757676702, "val_ppl": 447.5238037109375, "val_ece": 0.014017158187925816}, {"epoch": 5, "train_loss": 0.9078256678419049, "val_ppl": 466.2388916015625, "val_ece": 0.021758366376161575}, {"epoch": 6, "train_loss": 0.9058168179729358, "val_ppl": 470.92523193359375, "val_ece": 0.021627863869071007}, {"epoch": 7, "train_loss": 0.9032288059896353, "val_ppl": 486.5423889160156, "val_ece": 0.015052884817123413}, {"epoch": 8, "train_loss": 0.9009496786561954, "val_ppl": 511.56024169921875, "val_ece": 0.03628471866250038}, {"epoch": 9, "train_loss": 0.8994487359815714, "val_ppl": 532.0313720703125, "val_ece": 0.022885868325829506}, {"epoch": 10, "train_loss": 0.9005401643360553, "val_ppl": 580.1174926757812, "val_ece": 0.01574663072824478}], "final": {"val_ppl": 580.1174926757812, "val_ece": 0.01574663072824478, "wall_clock": 4346.752707481384}}
+Running experiment 'gpt2-medium_dpsm-cosine'
+  • Task       : language_modeling
+  • Dataset    : wikitext-2
+  • Model      : gpt2-medium
+  • Loss       : dpsm-cosine
+  • Epochs     : 10
+  • Batch size : 8
+
